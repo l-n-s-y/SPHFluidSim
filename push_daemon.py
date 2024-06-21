@@ -21,6 +21,12 @@ def load_schedule(schedule):
     dlog("Loaded new schedule.")
     dlog("Restarting...")
 
+
+pushart_repo = "" # TODO: Make repo
+def setup_github():
+    #os.popen(f"git clone {pushart_repo}")
+    os.popen(f"git remote set-url origin {pushart_repo}")
+    os.popen(f"git pull {pushart_repo}")
    
 def main():
     pushes_today = 0
@@ -29,6 +35,9 @@ def main():
     check_period = 10
 
     dlog("Starting daemon...")
+
+    setup_github()
+
     while True:
         time.sleep(check_period)
         if current_schedule == []:
@@ -42,9 +51,15 @@ def main():
         # Handle scheduled pushes
         if datetime.date.today().isoformat() == entry[0]:
             # If push requirement has been reached
-            if pushes_today >= entry[1]: break
+            if pushes_today >= entry[1]:
+                dlog("Push quota has already been reached.")
+                continue
 
-            os.popen(f"git commit -m 'new push @ {datetime.date.today().isoformat}-{datetime.datetime.now().time().isoformat()}'"
+            dlog("Valid push slot found. Committing")
+
+            commit_command = f"git commit -m 'new push @ {datetime.date.today().isoformat}-{datetime.datetime.now().time().isoformat()}'"
+            os.popen(commit_command + " && git push")
+            dlog("Finished commit. Sleeping...")
 
 if __name__ == "__main__":
     main()

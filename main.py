@@ -20,6 +20,16 @@ char_to_pushcount_table = {
         "#": 4
 }
 
+
+def write_schedule_to_file(schedule,filename):
+    mode = "w"
+    if os.path.exists(filename):
+        print(f"[W] schedule file \"{filename}\" already exists")
+        mode = "a"
+    with open(filename,mode) as f:
+        f.write(schedule)
+
+
 """
 Generate an array of (datetime,push_count) tuples to describe
 the provided ASCII img
@@ -46,7 +56,9 @@ def generate_schedule(img,start_date=None):
             current_char_push_timeslot = (current_date.isoformat(),c)
             schedule.append(current_char_push_timeslot)
 
-    return schedule
+
+
+    return schedule if len(schedule)>0 else None
 
 if __name__ == "__main__":
     
@@ -58,5 +70,7 @@ if __name__ == "__main__":
         exit()
 
     print(contribution_schedule)
+    
+    write_schedule_to_file(contribution_schedule,)
 
     render(image_to_render)

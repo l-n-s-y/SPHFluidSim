@@ -24,9 +24,12 @@ def load_schedule(schedule):
 
 pushart_repo = "" # TODO: Make repo
 def setup_github():
-    #os.popen(f"git clone {pushart_repo}")
-    os.popen(f"git remote set-url origin {pushart_repo}")
-    os.popen(f"git pull {pushart_repo}")
+    o = os.popen(f"git clone {pushart_repo}").read()
+    print(o)
+    o = os.popen(f"git remote set-url origin {pushart_repo}")
+    print(o)
+    o = os.popen(f"git pull {pushart_repo}")
+    print(o)
    
 def main():
     pushes_today = 0
